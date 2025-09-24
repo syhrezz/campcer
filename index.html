@@ -7,6 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        html { /* Add padding for fixed navigation */
+            scroll-behavior: smooth;
+        }
+    </style>
     <script>
         tailwind.config = {
             theme: {
@@ -18,7 +23,11 @@
                         dark: '#2c3e50'
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif']
+                        sans: ['poppins', 'system-ui', 'sans-serif']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite'
                     }
                 }
             }
@@ -28,15 +37,17 @@
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-blue-50 font-sans">
 
+
+    <!-- No fixed countdown timer -->
     
     <!-- Hero Section -->
-    <div class="relative bg-gradient-to-r from-primary to-secondary min-h-screen flex items-center pt-16">
+    <div class="relative bg-gradient-to-r from-primary to-secondary min-h-screen flex items-center pt-8 pb-20">
         <div class="absolute inset-0 bg-black/20"></div>
         <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
         
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center text-white">
-                <div class="inline-flex items-center bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8">
+                <div class="inline-flex items-center bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-4">
                     <i class="fas fa-mountain text-accent mr-3"></i>
                     <span class="font-medium">Adventure Awaits</span>
                 </div>
@@ -46,18 +57,17 @@
                     <span class="block text-accent">Malang Camp</span>
                 </h1>
                 
-                <p class="text-xl md:text-2xl mb-8 text-white/90 max-w-2xl mx-auto">
+                <p class="text-xl md:text-2xl mb-6 text-white/90 max-w-3xl mx-auto">
                     Join us for an unforgettable 2-day camping adventure in the beautiful highlands of Malang
                 </p>
                 
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-2">
                     <div class="flex items-center bg-white/10 backdrop-blur-sm rounded-lg px-6 py-4">
                         <i class="fas fa-calendar text-accent mr-3 text-xl"></i>
                         <div class="text-left">
                             <div class="text-sm text-white/80">Date</div>
                             <div class="font-semibold">10-12 Oktober 2025</div>
-         
-     </div>
+                        </div>
                     </div>
                     <div class="flex items-center bg-white/10 backdrop-blur-sm rounded-lg px-6 py-4">
                         <i class="fas fa-users text-accent mr-3 text-xl"></i>
@@ -68,10 +78,62 @@
                     </div>
                 </div>
                 
-                <a href="#gallery" class="inline-flex items-center bg-accent hover:bg-accent/90 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
-                     <span>View Details</span>
-                     <i class="fas fa-arrow-down ml-3"></i>
-                </a>
+                <!-- Countdown Timer in Hero Section -->
+                <div class="my-8" x-data="{
+                    eventDate: new Date('October 10, 2025 20:00:00').getTime(),
+                    now: new Date().getTime(),
+                    days: '00',
+                    hours: '00',
+                    minutes: '00',
+                    seconds: '00',
+                    countdown: function() {
+                        this.now = new Date().getTime();
+                        const distance = this.eventDate - this.now;
+                        
+                        if (distance > 0) {
+                            this.days = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                            this.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                            this.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                            this.seconds = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+                        }
+                    }
+                }" x-init="countdown(); setInterval(() => { countdown() }, 1000)">
+                    <div class="text-center mb-3">
+                        <h3 class="font-bold text-xl text-white">Kapan kita berangkat?</h3>
+                    </div>
+                    <div class="flex items-center justify-center space-x-4">
+                        <div class="text-center">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-lg w-16 h-16 flex items-center justify-center font-mono font-bold text-2xl" x-text="days">00</div>
+                            <div class="text-sm mt-2 text-white/90">Hari</div>
+                        </div>
+                        <div class="text-2xl font-bold text-white">:</div>
+                        <div class="text-center">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-lg w-16 h-16 flex items-center justify-center font-mono font-bold text-2xl" x-text="hours">00</div>
+                            <div class="text-sm mt-2 text-white/90">Jam</div>
+                        </div>
+                        <div class="text-2xl font-bold text-white">:</div>
+                        <div class="text-center">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-lg w-16 h-16 flex items-center justify-center font-mono font-bold text-2xl" x-text="minutes">00</div>
+                            <div class="text-sm mt-2 text-white/90">Menit</div>
+                        </div>
+                        <div class="text-2xl font-bold text-white">:</div>
+                        <div class="text-center">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-lg w-16 h-16 flex items-center justify-center font-mono font-bold text-2xl animate-pulse-slow" x-text="seconds">00</div>
+                            <div class="text-sm mt-2 text-white/90">Detik</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+                    <a href="#gallery" class="inline-flex items-center bg-accent hover:bg-accent/90 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <span>Lihat Detailnya</span>
+                        <i class="fas fa-arrow-down ml-3"></i>
+                    </a>
+                    <a href="#registration" class="inline-flex items-center bg-white hover:bg-white/90 text-primary px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <span>Konfirmasi Sekarang</span>
+                        <i class="fas fa-user-plus ml-3"></i>
+                    </a>
+                </div>
             </div>
         </div>
         
@@ -268,7 +330,7 @@
     </section>
 
     <!-- Itinerary Section -->
-    <section class="py-20 bg-gradient-to-b from-white to-gray-50">
+    <section id="itinerary" class="py-20 bg-gradient-to-b from-white to-gray-50">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold text-dark mb-4">Rencana Kegiatan</h2>
@@ -420,7 +482,7 @@
 
     
         <!-- Equipment & Budget Section -->
-    <section class="py-20 bg-white">
+    <section id="equipment" class="py-20 bg-white">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold text-dark mb-4">Rincian Biaya & Peralatan</h2>
@@ -603,8 +665,160 @@
         </div>
     </section>
 
+    <!-- Registration Form Section -->  
+    <section id="registration" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-dark mb-4">Konfirmasi mo jadi ikut ngga?</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Isi formulir di bawah untuk bergabung dalam petualangan camping ini</p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-gradient-to-br from-primary/5 to-secondary/5 p-8 rounded-2xl shadow-lg">
+                    <form id="registrationForm" x-data="{
+                        name: '',
+                        specialEquipment: '',
+                        foodAllergy: '',
+                        foodRequest: '',
+                        message: '',
+                        formSubmitted: false,
+                        formError: false,
+                        errorMessage: '',
+                        validateForm() {
+                            if (!this.name) {
+                                this.formError = true;
+                                this.errorMessage = 'Mohon isi nama Anda';
+                                return false;
+                            }
+                            return true;
+                        },
+                        submitForm() {
+                            if (this.validateForm()) {
+                                // Format the WhatsApp message
+                                let whatsappMsg = `*Pendaftaran Camping Batu Bengkung*%0A%0A`;
+                                whatsappMsg += `Nama: ${this.name}%0A`;
+                                
+                                if (this.specialEquipment) {
+                                    whatsappMsg += `Permintaan Peralatan Khusus: ${this.specialEquipment}%0A`;
+                                }
+                                
+                                if (this.foodAllergy) {
+                                    whatsappMsg += `Info Alergi Makanan: ${this.foodAllergy}%0A`;
+                                }
+                                
+                                if (this.foodRequest) {
+                                    whatsappMsg += `Permintaan Makanan: ${this.foodRequest}%0A`;
+                                }
+                                
+                                if (this.message) {
+                                    whatsappMsg += `Pesan Tambahan: ${this.message}%0A`;
+                                }
+                                
+                                // Open WhatsApp with the formatted message
+                                window.open(`https://wa.me/62?text=${whatsappMsg}`, '_blank');
+                                
+                                this.formSubmitted = true;
+                                this.formError = false;
+                                
+                                // Reset form after submission
+                                setTimeout(() => {
+                                    this.name = '';
+                                    this.specialEquipment = '';
+                                    this.foodAllergy = '';
+                                    this.foodRequest = '';
+                                    this.message = '';
+                                    this.formSubmitted = false;
+                                }, 3000);
+                            }
+                        }
+                    }" @submit.prevent="submitForm()" class="space-y-6">
+                        <!-- Success Message -->
+                        <div x-show="formSubmitted" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded" x-transition>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle mr-3"></i>
+                                <p>Formulir berhasil dikirim! Anda akan diarahkan ke WhatsApp.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Error Message -->
+                        <div x-show="formError" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded" x-transition>
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-circle mr-3"></i>
+                                <p x-text="errorMessage"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 gap-6">
+                            <!-- Name -->
+                            <div>
+                                <label for="name" class="block text-dark font-medium mb-2">Nama <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    <input type="text" id="name" x-model="name" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300" placeholder="Masukkan nama">
+                                </div>
+                            </div>
+                            
+                            <!-- Special Equipment Request -->
+                            <div>
+                                <label for="specialEquipment" class="block text-dark font-medium mb-2">Permintaan Peralatan Khusus</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <i class="fas fa-campground"></i>
+                                    </span>
+                                    <input type="text" id="specialEquipment" x-model="specialEquipment" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300" placeholder="Contoh: kursi, hammock, sleeping bag, dll">
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">Peralatan pribadi yang ingin Anda sewa atau minta bantuan untuk disediakan</p>
+                            </div>
+                            
+                            <!-- Food Allergy -->
+                            <div>
+                                <label for="foodAllergy" class="block text-dark font-medium mb-2">Info Alergi Makanan</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <i class="fas fa-allergies"></i>
+                                    </span>
+                                    <input type="text" id="foodAllergy" x-model="foodAllergy" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300" placeholder="Contoh: kacang, seafood, dll">
+                                </div>
+                            </div>
+                            
+                            <!-- Food Request -->
+                            <div>
+                                <label for="foodRequest" class="block text-dark font-medium mb-2">Permintaan Makanan</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <i class="fas fa-utensils"></i>
+                                    </span>
+                                    <input type="text" id="foodRequest" x-model="foodRequest" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300" placeholder="Contoh: vegetarian, tidak pedas, dll">
+                                </div>
+                            </div>
+                            
+                            <!-- Message -->
+                            <div>
+                                <label for="message" class="block text-dark font-medium mb-2">Pesan Tambahan</label>
+                                <div class="relative">
+                                    <textarea id="message" x-model="message" rows="4" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300" placeholder="Tulis pesan atau pertanyaan tambahan di sini..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                <span>Kirim</span>
+                                <i class="fab fa-whatsapp ml-3 text-xl"></i>
+                            </button>
+                            <p class="mt-3 text-sm text-gray-500">Formulir akan dikirim melalui WhatsApp</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Safety & Guidelines Section -->
-    <section class="py-20 bg-gradient-to-r from-primary to-secondary">
+    <section id="safety" class="py-20 bg-gradient-to-r from-primary to-secondary">
         <div class="container mx-auto px-6">
             <div class="max-w-4xl mx-auto text-center text-white">
                 <h2 class="text-4xl font-bold mb-8">Panduan Keamanan & Barang Pribadi</h2>
@@ -686,7 +900,7 @@
                         <i class="fas fa-phone mr-3"></i>
                         Hubungi Penyelenggara
                     </a>
-                    <a href="https://wa.me/62" class="inline-flex items-center bg-secondary hover:bg-secondary/90 text-white px-6 py-3 rounded-full font-medium transition-all duration-300">
+                    <a href="https://wa.me/62?text=Halo%2C%20saya%20tertarik%20dengan%20Camping%20Batu%20Bengkung" class="inline-flex items-center bg-secondary hover:bg-secondary/90 text-white px-6 py-3 rounded-full font-medium transition-all duration-300">
                         <i class="fab fa-whatsapp mr-3"></i>
                         Grup WhatsApp
                     </a>
